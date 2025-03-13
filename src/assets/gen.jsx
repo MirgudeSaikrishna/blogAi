@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+require('dotenv').config()
 
 const Gen = () => {
-    const API_URL = process.env.config(URL);
+    const API_URL = process.env.URL;
     const [topic, setTopic] = useState('');
     const [generatedContent, setGeneratedContent] = useState('');
     const [loading, setLoading] = useState(false);
