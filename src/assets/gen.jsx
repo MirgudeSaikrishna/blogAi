@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const Gen = () => {
-    const API_URL = process.env.URL;
+    const API_URL = process.env.config(URL);
     const [topic, setTopic] = useState('');
     const [generatedContent, setGeneratedContent] = useState('');
     const [loading, setLoading] = useState(false);
