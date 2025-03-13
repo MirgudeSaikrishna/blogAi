@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
- import axios from 'axios';
+import axios from 'axios';
 
 const Gen = () => {
+    const API_URL = process.env.URL;
     const [topic, setTopic] = useState('');
     const [generatedContent, setGeneratedContent] = useState('');
     const [loading, setLoading] = useState(false);
@@ -15,7 +16,7 @@ const Gen = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('http://localhost:5000/generate-content', { topic });
+            const response = await axios.post('${API_URL}/generate-content', { topic });
             setGeneratedContent(response.data.content);
         } catch (error) {
             alert('Error generating content456');
