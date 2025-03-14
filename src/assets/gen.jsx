@@ -16,7 +16,7 @@ const Gen = () => {
         setLoading(true);
 
         try {
-            const response = await axios.post('${API_URL}/generate-content', { topic });
+            const response = await axios.post('https://blogai-backend.onrender.com/generate-content', { topic });
             setGeneratedContent(response.data.content);
         } catch (error) {
             alert('Error generating content456');
