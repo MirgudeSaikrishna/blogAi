@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import 'dotenv/config'
 
 const Gen = () => {
     const API_URL = process.env.URL;
