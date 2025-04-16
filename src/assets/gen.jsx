@@ -13,7 +13,7 @@ const Gen = () => {
         setLoading(true);
 
         try {
-            const eventSource = new EventSource('https://blogai-backend.onrender.com' + encodeURIComponent(topic));
+            const eventSource = new EventSource('https://blogai-backend.onrender.com/generate-content?topic=' + encodeURIComponent(topic));
             eventSource.onmessage = (event) => {
                 if (event.data === '[DONE]') {
                     eventSource.close();
