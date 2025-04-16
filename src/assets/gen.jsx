@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-
 const Gen = () => {
-    const API_URL = process.env.URL;
     const [topic, setTopic] = useState('');
     const [generatedContent, setGeneratedContent] = useState('');
     const [loading, setLoading] = useState(false);
@@ -12,40 +9,48 @@ const Gen = () => {
             alert('Please enter a topic');
             return;
         }
- 
+        setGeneratedContent('');
         setLoading(true);
 
         try {
-            const response = await axios.post('https://blogai-backend.onrender.com/generate-content', { topic });
-            setGeneratedContent(response.data.content);
+            const eventSource = new EventSource('http://localhost:5000/generate-content?topic=' + encodeURIComponent(topic));
+            eventSource.onmessage = (event) => {
+                if (event.data === '[DONE]') {
+                    eventSource.close();
+                    setLoading(false);
+                }else {
+                    setGeneratedContent(prevContent => prevContent + event.data);
+                }
+            };
         } catch (error) {
-            alert('Error generating content456');
+            alert('Event Source error: ' + error.message);
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <>
-            <h1>AI Content Generator</h1>
-            <textarea
-                placeholder="Enter a topic or keywords"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                rows="4"
-                cols="50"
-            ></textarea>
-            <br />
-            <button onClick={handleGenerateContent} disabled={loading}>
-                {loading ? 'Generating...' : 'Generate Blog Post'}
-            </button>
-            {generatedContent && (
-                <div>
-                    <h2>Generated Blog Post</h2>
-                    <p>{generatedContent}</p>
-                </div>
-            )}
-        </>
+        <div style={{ maxWidth: '600px', margin: 'auto', padding: '20px' }}>
+      <h2>Live Blog Post Generator</h2>
+      <input
+        type="text"
+        placeholder="Enter a topic"
+        value={topic}
+        onChange={(e) => setTopic(e.target.value)}
+        style={{ width: '100%', padding: '10px', fontSize: '1rem' }}
+      />
+      <button
+        onClick={handleGenerateContent}
+        disabled={loading || !topic}
+        style={{ marginTop: '10px', padding: '10px 20px' }}
+      >
+        {loading ? 'Generating...' : 'Generate'}
+      </button>
+
+      <div style={{ whiteSpace: 'pre-wrap', marginTop: '20px', minHeight: '200px' }}>
+        {generatedContent}
+      </div>
+    </div>
     );
 };
 
